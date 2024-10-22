@@ -8,17 +8,13 @@
 ;-------------------------------------------------------------------------
 ;parametry funkcji: RCX RDX R8 R9 stos, 
 ;lub zmiennoprzec.  XMM0 1 2 3
-MyProc1 proc		
-add 	rcx, rdx
-mov 	rax, rcx
-jnc ET1
-ror	rcx,1
-mul 	rcx
-ret
-ET1:	
-neg 	rax
-ret
-MyProc1 endp
+Increment proc
+    ; RCX zawiera wskaŸnik na zmienn¹
+    mov     eax, [rcx]    ; Za³aduj wartoœæ zmiennej do EAX (32-bitowa operacja)
+    inc     eax           ; Zwiêksz wartoœæ o 1
+    mov     [rcx], eax    ; Zapisz zaktualizowan¹ wartoœæ z powrotem do pamiêci
+    ret
+Increment endp
 
 END 			;no entry point
 ;-------------------------------------------------------------------------

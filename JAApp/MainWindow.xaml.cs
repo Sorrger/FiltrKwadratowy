@@ -11,13 +11,13 @@ namespace SquareFilter
     {
         private BitmapImage loadedBitmap;
 
-        [DllImport("JA_DLL.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("C:/Users/Sorrg/Desktop/git2/SquareFilter/x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Increment(ref int value);
         public MainWindow()
         {
             InitializeComponent();
             int a = 5;
-            //Increment(ref a); 
+            Increment(ref a); 
             int b = 5;
         }
 
