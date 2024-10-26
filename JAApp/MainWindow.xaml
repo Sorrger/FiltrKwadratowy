@@ -54,5 +54,32 @@
                 FontSize="30"
                 Background="LightGray"
                 Click="Button_Click"/>
+
+        <!-- Radio button critical part of code choice -->
+        <Grid Grid.Row="3"
+              Grid.Column="2"
+              Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center"
+                       Text="ASSEMBLY"/>
+            <RadioButton Grid.Row="0"
+                         x:Name="ARB"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center"/>
+
+            <TextBlock Grid.Row="1"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center"
+                       Text="C++"/>
+            <RadioButton Grid.Row="1"
+                         x:Name="CRB"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center"/>
+        </Grid>
     </Grid>
 </Window>

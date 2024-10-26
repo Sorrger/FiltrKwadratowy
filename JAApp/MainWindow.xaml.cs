@@ -17,7 +17,6 @@ namespace SquareFilter
         public MainWindow()
         {
             InitializeComponent();
-
         }
         public void ButtonTask()
         {
@@ -42,15 +41,21 @@ namespace SquareFilter
 
                 int numThreads = 4;
                 int segmentHeight = height / numThreads;
-
+                bool cppButton = (bool)CRB.IsChecked;
+                bool asmButton = (bool)ARB.IsChecked;
                 Parallel.For(0, numThreads, i =>
                 {
                     int startY = i * segmentHeight;
                     int endY = (i == numThreads - 1) ? height : startY + segmentHeight;
 
                     int startIdx = startY * width * 4;
+                    if (asmButton)
+                        Darken(ref pixelData[startIdx], (endY - startY) * width * 4);
+                    else if (cppButton)
+                        Debug.WriteLine("CPP JESCZE NEI NAPISANE");
+                    else
+                        Debug.WriteLine("Bez filtrowania - nie wybrano trybu");
 
-                    Darken(ref pixelData[startIdx], (endY - startY) * width * 4);
                 });
 
                 Marshal.Copy(pixelData, 0, filteredBitmap.BackBuffer, length);
@@ -62,9 +67,6 @@ namespace SquareFilter
 
             FilteredImage.Source = filteredBitmap;
         }
-
-
-
         private void ImageDragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
