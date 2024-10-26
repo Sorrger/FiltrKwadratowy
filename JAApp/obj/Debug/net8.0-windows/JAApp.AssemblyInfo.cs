@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JAApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1b9492a4bd18c1e604447898718d0031ea72fcb2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+853cf6a9bc45c69e2fce43185b40719bf2209eae")]
 [assembly: System.Reflection.AssemblyProductAttribute("JAApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JAApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

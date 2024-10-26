@@ -52,6 +52,7 @@
                 Grid.Row="3"
                 Content="Filter"
                 FontSize="30"
-                Background="LightGray"/>
+                Background="LightGray"
+                Click="Button_Click"/>
     </Grid>
 </Window>

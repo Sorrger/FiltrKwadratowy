@@ -11,15 +11,59 @@ namespace SquareFilter
     {
         private BitmapImage loadedBitmap;
 
-        [DllImport("C:/Users/Sorrg/Desktop/git2/SquareFilter/x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Increment(ref int value);
+        [DllImport("C:/Users/Sorrg/source/repos/Sorrger/SquareFilter/x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern void Darken(ref byte pixelData, int length);
+        int a = 0;
         public MainWindow()
         {
             InitializeComponent();
-            int a = 5;
-            Increment(ref a); 
-            int b = 5;
+
         }
+        public void ButtonTask()
+        {
+            if (loadedBitmap == null)
+            {
+                Debug.WriteLine("Obraz nie został załadowany.");
+                return;
+            }
+
+            int height = loadedBitmap.PixelHeight;
+            int width = loadedBitmap.PixelWidth;
+
+            WriteableBitmap filteredBitmap = new WriteableBitmap(loadedBitmap);
+
+            filteredBitmap.Lock();
+            try
+            {
+                int length = width * height * 4;
+                byte[] pixelData = new byte[length];
+
+                Marshal.Copy(filteredBitmap.BackBuffer, pixelData, 0, length);
+
+                int numThreads = 4;
+                int segmentHeight = height / numThreads;
+
+                Parallel.For(0, numThreads, i =>
+                {
+                    int startY = i * segmentHeight;
+                    int endY = (i == numThreads - 1) ? height : startY + segmentHeight;
+
+                    int startIdx = startY * width * 4;
+
+                    Darken(ref pixelData[startIdx], (endY - startY) * width * 4);
+                });
+
+                Marshal.Copy(pixelData, 0, filteredBitmap.BackBuffer, length);
+            }
+            finally
+            {
+                filteredBitmap.Unlock();
+            }
+
+            FilteredImage.Source = filteredBitmap;
+        }
+
+
 
         private void ImageDragEnter(object sender, DragEventArgs e)
         {
@@ -86,6 +130,11 @@ namespace SquareFilter
         {
             string extension = Path.GetExtension(filePath)?.ToLower();
             return extension == ".png" || extension == ".jpg" || extension == ".jpeg" || extension == ".bmp";
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonTask();
         }
     }
 }
