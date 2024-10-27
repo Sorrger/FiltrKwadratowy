@@ -11,12 +11,13 @@ namespace SquareFilter
     {
         private BitmapImage loadedBitmap;
 
-        [DllImport("C:/Users/Sorrg/source/repos/Sorrger/SquareFilter/x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("/../../../../x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Darken(ref byte pixelData, int length);
         int a = 0;
         public MainWindow()
         {
             InitializeComponent();
+
         }
         public void ButtonTask()
         {
