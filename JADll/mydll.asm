@@ -5,36 +5,36 @@
 .CODE
 
 Darken proc
-; Ustal wartoœæ, o któr¹ zwiêkszymy ka¿dy kana³ (np. 30)
-    mov r8b, 30             ; Zwiêkszenie o 30 dla ka¿dego komponentu B, G, R
+    ; Ustal wartoœæ czynnika przyciemnienia (50%)
+    mov r8, 128               ; Mno¿nik (128) - 50% w skali 0-255
+    mov r9, 255               ; Dzielnik (255) - dla obliczeñ
 
     ; Przetwarzamy ka¿dy bajt w tablicy
-    xor rbx, rbx            ; Zerujemy rbx, bêdzie u¿ywane jako licznik
+    xor rbx, rbx              ; Zerujemy rbx, bêdzie u¿ywane jako licznik
 
 process_pixel:
     ; Sprawdzamy, czy osi¹gnêliœmy koniec tablicy
-    cmp rbx, rdx            ; Jeœli licznik >= liczba elementów, zakoñcz
+    cmp rbx, rdx              ; Jeœli licznik >= liczba elementów, zakoñcz
     jge end_function
 
     ; £adujemy wartoœæ piksela
     mov al, byte ptr [rcx + rbx]   ; Pobierz wartoœæ piksela (kolor B, G lub R)
 
-    ; Dodajemy wartoœæ podbicia, sprawdzaj¹c maksymaln¹ wartoœæ 255
-    sub al, r8b                    ; Dodajemy zwiêkszenie (r8b) do bie¿¹cej wartoœci
-    jns store_value                ; Jeœli wynik nie jest ujemny, zapisz
-    xor al, al
+    ; Mno¿enie przez 0.5 (w skali 0-255)
+    imul rax, r8               ; Mno¿enie przez 128
+    xor rdx, rdx               ; Zeruj rdx przed dzieleniem
+    div r9                      ; Dziel przez 255, wynik w al
 
-store_value:
     ; Zapisz z powrotem zmodyfikowan¹ wartoœæ
     mov byte ptr [rcx + rbx], al
 
     ; PrzejdŸ do nastêpnego elementu
-    inc rbx                        ; Zwiêkszamy licznik bajtów (nastêpny kana³)
-    jmp process_pixel              ; Kontynuujemy dla kolejnego koloru
+    inc rbx                    ; Zwiêkszamy licznik bajtów (nastêpny kana³)
+    jmp process_pixel          ; Kontynuujemy dla kolejnego koloru
 
 end_function:
     ret
 Darken endp
 
-END             ;no entry point
+END             ; no entry point
 ;-------------------------------------------------------------------------

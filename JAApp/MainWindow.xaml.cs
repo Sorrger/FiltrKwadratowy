@@ -13,7 +13,9 @@ namespace SquareFilter
 
         [DllImport("/../../../../x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Darken(ref byte pixelData, int length);
-        int a = 0;
+
+        [DllImport("/../../../../x64/Debug/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern void Darken2(ref byte pixelData, int length);
         public MainWindow()
         {
             InitializeComponent();
@@ -41,22 +43,39 @@ namespace SquareFilter
                 Marshal.Copy(filteredBitmap.BackBuffer, pixelData, 0, length);
 
                 int numThreads = 4;
-                int segmentHeight = height / numThreads;
+                int baseSegmentHeight = height / numThreads;
+                int extraRows = height % numThreads;
+
+                int[] segmentHeights = new int[numThreads];
+                for (int i = 0; i < numThreads; i++)
+                {
+                    segmentHeights[i] = baseSegmentHeight;
+                    if (i < extraRows)
+                    {
+                        segmentHeights[i]++;
+                    }
+                }
                 bool cppButton = (bool)CRB.IsChecked;
                 bool asmButton = (bool)ARB.IsChecked;
                 Parallel.For(0, numThreads, i =>
                 {
-                    int startY = i * segmentHeight;
-                    int endY = (i == numThreads - 1) ? height : startY + segmentHeight;
+                    int startY = 0;
+                    for (int j = 0; j < i; j++)
+                    {
+                        startY += segmentHeights[j];
+                    }
+                    int endY = startY + segmentHeights[i];
 
                     int startIdx = startY * width * 4;
+
+                    int segmentLength = (endY - startY) * width * 4;
+
                     if (asmButton)
-                        Darken(ref pixelData[startIdx], (endY - startY) * width * 4);
+                        Darken(ref pixelData[startIdx], segmentLength);
                     else if (cppButton)
-                        Debug.WriteLine("CPP JESCZE NEI NAPISANE");
+                        Darken2(ref pixelData[startIdx], segmentLength);
                     else
                         Debug.WriteLine("Bez filtrowania - nie wybrano trybu");
-
                 });
 
                 Marshal.Copy(pixelData, 0, filteredBitmap.BackBuffer, length);
@@ -68,6 +87,9 @@ namespace SquareFilter
 
             FilteredImage.Source = filteredBitmap;
         }
+
+
+
         private void ImageDragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))

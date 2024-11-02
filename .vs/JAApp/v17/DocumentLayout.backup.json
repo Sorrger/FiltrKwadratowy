@@ -7,24 +7,36 @@
       "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|solutionrelative:CPPDLL\\DarkenImage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\dllmain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|solutionrelative:CPPDLL\\dllmain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|solutionrelative:JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\jaapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\jaapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\mydll.def||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|solutionrelative:CPPDLL\\mydll.def||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.def||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|solutionrelative:JADll\\mydll.def||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\jaapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\jaapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,11 +46,60 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "JAApp\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml",
+              "RelativeToolTip": "JAApp\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-02T10:46:02.348Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DarkenImage.cpp",
+              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp",
+              "RelativeDocumentMoniker": "CPPDLL\\DarkenImage.cpp",
+              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp",
+              "RelativeToolTip": "CPPDLL\\DarkenImage.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-11-02T10:39:50.784Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "mydll.def",
+              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\mydll.def",
+              "RelativeDocumentMoniker": "CPPDLL\\mydll.def",
+              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\mydll.def",
+              "RelativeToolTip": "CPPDLL\\mydll.def",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001913|",
+              "WhenOpened": "2024-11-02T10:35:22.91Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "dllmain.cpp",
+              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\dllmain.cpp",
+              "RelativeDocumentMoniker": "CPPDLL\\dllmain.cpp",
+              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\dllmain.cpp",
+              "RelativeToolTip": "CPPDLL\\dllmain.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-11-02T10:34:21.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "AssemblyInfo.cs",
               "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\AssemblyInfo.cs",
               "RelativeDocumentMoniker": "JAApp\\AssemblyInfo.cs",
@@ -62,49 +123,38 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "JAApp\\MainWindow.xaml",
-              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml",
-              "RelativeToolTip": "JAApp\\MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-10-26T12:26:28.268Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "JAApp\\MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
               "RelativeToolTip": "JAApp\\MainWindow.xaml.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAswBMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADYAAAAAAAAAAAAYwDgAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-22T23:48:02.968Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "mydll.def",
               "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.def",
               "RelativeDocumentMoniker": "JADll\\mydll.def",
               "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.def",
               "RelativeToolTip": "JADll\\mydll.def",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001913|",
               "WhenOpened": "2024-10-22T23:46:16.97Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "mydll.asm",
               "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm",
               "RelativeDocumentMoniker": "JADll\\mydll.asm",
               "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm",
               "RelativeToolTip": "JADll\\mydll.asm",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAwBkAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2024-10-22T23:45:40.538Z"
             }
