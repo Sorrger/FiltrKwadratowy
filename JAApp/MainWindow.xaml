@@ -46,14 +46,31 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Stretch"/>
         </Border>
-        
-        <!-- Button to filter --> 
-        <Button Grid.Column="1"
-                Grid.Row="3"
-                Content="Filter"
-                FontSize="30"
-                Background="LightGray"
-                Click="Button_Click"/>
+        <Grid Grid.Column="1"
+              Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Button to filter -->
+            <Button Grid.Column = "0"
+                    Content="Filter"
+                    FontSize="30"
+                    Background="LightGray"
+                    Click="Button_Click"/>
+            
+            <!-- ComboBox with thread number -->
+            <ComboBox Grid.Column="1"
+                      x:Name="threadChoice">
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="16"/>
+                <ComboBoxItem Content="32"/>
+            </ComboBox>
+        </Grid>
+
+
 
         <!-- Radio button critical part of code choice -->
         <Grid Grid.Row="3"
@@ -81,5 +98,9 @@
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center"/>
         </Grid>
+        <TextBlock x:Name="TimerText"
+                   Grid.Row="3"
+                   Grid.Column="3"/>
+
     </Grid>
 </Window>

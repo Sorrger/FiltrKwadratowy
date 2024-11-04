@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace SquareFilter
@@ -29,64 +30,89 @@ namespace SquareFilter
                 return;
             }
 
-            int height = loadedBitmap.PixelHeight;
-            int width = loadedBitmap.PixelWidth;
-
-            WriteableBitmap filteredBitmap = new WriteableBitmap(loadedBitmap);
-
-            filteredBitmap.Lock();
-            try
+            // Retrieve the number of threads from the ComboBox
+            if (threadChoice.SelectedItem is ComboBoxItem selectedItem)
             {
-                int length = width * height * 4;
-                byte[] pixelData = new byte[length];
-
-                Marshal.Copy(filteredBitmap.BackBuffer, pixelData, 0, length);
-
-                int numThreads = 4;
-                int baseSegmentHeight = height / numThreads;
-                int extraRows = height % numThreads;
-
-                int[] segmentHeights = new int[numThreads];
-                for (int i = 0; i < numThreads; i++)
+                int numThreads;
+                if (int.TryParse(selectedItem.Content.ToString(), out numThreads) && numThreads > 0)
                 {
-                    segmentHeights[i] = baseSegmentHeight;
-                    if (i < extraRows)
+                    int height = loadedBitmap.PixelHeight;
+                    int width = loadedBitmap.PixelWidth;
+
+                    WriteableBitmap filteredBitmap = new WriteableBitmap(loadedBitmap);
+
+                    filteredBitmap.Lock();
+                    try
                     {
-                        segmentHeights[i]++;
+                        Stopwatch stopwatch = Stopwatch.StartNew();
+
+                        int length = width * height * 4;
+                        byte[] pixelData = new byte[length];
+
+                        Marshal.Copy(filteredBitmap.BackBuffer, pixelData, 0, length);
+
+                        int baseSegmentHeight = height / numThreads;
+                        int extraRows = height % numThreads;
+
+                        int[] segmentHeights = new int[numThreads];
+                        for (int i = 0; i < numThreads; i++)
+                        {
+                            segmentHeights[i] = baseSegmentHeight;
+                            if (i < extraRows)
+                            {
+                                segmentHeights[i]++;
+                            }
+                        }
+
+                        bool cppButton = (bool)CRB.IsChecked;
+                        bool asmButton = (bool)ARB.IsChecked;
+
+                        Parallel.For(0, numThreads, i =>
+                        {
+                            int startY = 0;
+                            for (int j = 0; j < i; j++)
+                            {
+                                startY += segmentHeights[j];
+                            }
+                            int endY = startY + segmentHeights[i];
+
+                            int startIdx = startY * width * 4;
+
+                            int segmentLength = (endY - startY) * width * 4;
+
+                            if (asmButton)
+                                Darken(ref pixelData[startIdx], segmentLength);
+                            else if (cppButton)
+                                Darken2(ref pixelData[startIdx], segmentLength);
+                            else
+                                Debug.WriteLine("Bez filtrowania - nie wybrano trybu");
+                        });
+
+                        Marshal.Copy(pixelData, 0, filteredBitmap.BackBuffer, length);
+
+                        stopwatch.Stop();
+                        TimeSpan ts = stopwatch.Elapsed;
+
+                        TimerText.Text = $"Czas przetwarzania: {ts.TotalMilliseconds} ms";
                     }
+                    finally
+                    {
+                        filteredBitmap.Unlock();
+                    }
+
+                    FilteredImage.Source = filteredBitmap;
                 }
-                bool cppButton = (bool)CRB.IsChecked;
-                bool asmButton = (bool)ARB.IsChecked;
-                Parallel.For(0, numThreads, i =>
+                else
                 {
-                    int startY = 0;
-                    for (int j = 0; j < i; j++)
-                    {
-                        startY += segmentHeights[j];
-                    }
-                    int endY = startY + segmentHeights[i];
-
-                    int startIdx = startY * width * 4;
-
-                    int segmentLength = (endY - startY) * width * 4;
-
-                    if (asmButton)
-                        Darken(ref pixelData[startIdx], segmentLength);
-                    else if (cppButton)
-                        Darken2(ref pixelData[startIdx], segmentLength);
-                    else
-                        Debug.WriteLine("Bez filtrowania - nie wybrano trybu");
-                });
-
-                Marshal.Copy(pixelData, 0, filteredBitmap.BackBuffer, length);
+                    Debug.WriteLine("Proszę wybrać prawidłową liczbę wątków.");
+                }
             }
-            finally
+            else
             {
-                filteredBitmap.Unlock();
+                Debug.WriteLine("Proszę wybrać liczbę wątków z listy.");
             }
-
-            FilteredImage.Source = filteredBitmap;
         }
+
 
 
 
