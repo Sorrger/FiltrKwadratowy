@@ -4,19 +4,21 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace SquareFilter
 {
     public partial class MainWindow : Window
     {
-        private BitmapImage loadedBitmap;
+        private BitmapSource loadedBitmap;
 
         [DllImport("/../../../../x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Darken(ref byte pixelData, int length);
 
         [DllImport("/../../../../x64/Debug/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Darken2(ref byte pixelData, int length);
+        public static extern void Darken2(ref byte pixelData, int width, int startY, int segmentHeight);
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,8 +31,6 @@ namespace SquareFilter
                 Debug.WriteLine("Obraz nie został załadowany.");
                 return;
             }
-
-            // Retrieve the number of threads from the ComboBox
             if (threadChoice.SelectedItem is ComboBoxItem selectedItem)
             {
                 int numThreads;
@@ -44,12 +44,11 @@ namespace SquareFilter
                     filteredBitmap.Lock();
                     try
                     {
-                        Stopwatch stopwatch = Stopwatch.StartNew();
-
-                        int length = width * height * 4;
+                        int length = width * height * 3;
                         byte[] pixelData = new byte[length];
 
-                        Marshal.Copy(filteredBitmap.BackBuffer, pixelData, 0, length);
+                        IntPtr pBackBuffer = filteredBitmap.BackBuffer;
+                        Marshal.Copy(pBackBuffer, pixelData, 0, length);
 
                         int baseSegmentHeight = height / numThreads;
                         int extraRows = height % numThreads;
@@ -67,6 +66,8 @@ namespace SquareFilter
                         bool cppButton = (bool)CRB.IsChecked;
                         bool asmButton = (bool)ARB.IsChecked;
 
+                        Stopwatch stopwatch = Stopwatch.StartNew();
+
                         Parallel.For(0, numThreads, i =>
                         {
                             int startY = 0;
@@ -74,21 +75,19 @@ namespace SquareFilter
                             {
                                 startY += segmentHeights[j];
                             }
-                            int endY = startY + segmentHeights[i];
+                            int segmentHeight = segmentHeights[i];
 
-                            int startIdx = startY * width * 4;
-
-                            int segmentLength = (endY - startY) * width * 4;
+                            int startIdx = startY * width * 3;
 
                             if (asmButton)
-                                Darken(ref pixelData[startIdx], segmentLength);
+                                Darken(ref pixelData[startIdx], segmentHeight * width * 3);
                             else if (cppButton)
-                                Darken2(ref pixelData[startIdx], segmentLength);
+                                Darken2(ref pixelData[startIdx], width, startY, segmentHeight);
                             else
                                 Debug.WriteLine("Bez filtrowania - nie wybrano trybu");
                         });
 
-                        Marshal.Copy(pixelData, 0, filteredBitmap.BackBuffer, length);
+                        Marshal.Copy(pixelData, 0, pBackBuffer, length);
 
                         stopwatch.Stop();
                         TimeSpan ts = stopwatch.Elapsed;
@@ -162,14 +161,18 @@ namespace SquareFilter
         {
             try
             {
-                loadedBitmap = new BitmapImage();
-                loadedBitmap.BeginInit();
-                loadedBitmap.UriSource = new Uri(filePath, UriKind.Absolute);
-                loadedBitmap.CacheOption = BitmapCacheOption.OnLoad;
-                loadedBitmap.EndInit();
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+
+                // Konwersja do formatu RGB (24bpp)
+                FormatConvertedBitmap rgbBitmap = new FormatConvertedBitmap(bitmapImage, PixelFormats.Rgb24, null, 0);
+                loadedBitmap = rgbBitmap;
 
                 image.Source = loadedBitmap;
-                Debug.WriteLine("Obraz został pomyślnie ustawiony oraz bitmapa zapisana.");
+                Debug.WriteLine("Obraz został pomyślnie ustawiony jako RGB.");
             }
             catch (Exception ex)
             {

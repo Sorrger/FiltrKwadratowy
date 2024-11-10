@@ -63,8 +63,11 @@
             <!-- ComboBox with thread number -->
             <ComboBox Grid.Column="1"
                       x:Name="threadChoice">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
                 <ComboBoxItem Content="4"/>
                 <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="12"/>
                 <ComboBoxItem Content="16"/>
                 <ComboBoxItem Content="32"/>
             </ComboBox>
