@@ -15,15 +15,15 @@ extern "C" __declspec(dllexport) void Darken2(unsigned char* pixelData, int widt
 
             for (int dy = -halfMask; dy <= halfMask; ++dy) {
                 for (int dx = -halfMask; dx <= halfMask; ++dx) {
-                    if (dx == 0 && dy == 0) continue;
-
                     int nx = x + dx;
                     int ny = y + dy + startY;
-                    int index = (ny * width + nx) * 3;
 
-                    sumBlue += tempData[index] * maskValue;
-                    sumGreen += tempData[index + 1] * maskValue;
-                    sumRed += tempData[index + 2] * maskValue;
+                    if (nx >= 0 && nx < width && ny >= 0 && ny < segmentHeight + startY) {
+                        int index = (ny * width + nx) * 3;
+                        sumBlue += tempData[index] * maskValue;
+                        sumGreen += tempData[index + 1] * maskValue;
+                        sumRed += tempData[index + 2] * maskValue;
+                    }
                 }
             }
 
@@ -33,5 +33,4 @@ extern "C" __declspec(dllexport) void Darken2(unsigned char* pixelData, int widt
             pixelData[currentIndex + 2] = static_cast<unsigned char>(fminf(255.0f, sumRed));
         }
     }
-}
-
+};

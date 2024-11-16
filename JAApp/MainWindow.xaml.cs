@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,8 +15,9 @@ namespace SquareFilter
     {
         private BitmapSource loadedBitmap;
 
+        // Importowanie funkcji z bibliotek DLL
         [DllImport("/../../../../x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Darken(ref byte pixelData, int length);
+        public static extern void Darken(ref byte pixelData, int width, int startY, int segmentHeight);
 
         [DllImport("/../../../../x64/Debug/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Darken2(ref byte pixelData, int width, int startY, int segmentHeight);
@@ -22,98 +25,102 @@ namespace SquareFilter
         public MainWindow()
         {
             InitializeComponent();
-
         }
+
         public void ButtonTask()
         {
             if (loadedBitmap == null)
             {
-                Debug.WriteLine("Obraz nie został załadowany.");
+                TimerText.Text = "Obraz nie został załadowany.";
                 return;
             }
+
             if (threadChoice.SelectedItem is ComboBoxItem selectedItem)
             {
-                int numThreads;
-                if (int.TryParse(selectedItem.Content.ToString(), out numThreads) && numThreads > 0)
+                if (int.TryParse(selectedItem.Content.ToString(), out int numThreads) && numThreads > 0)
                 {
                     int height = loadedBitmap.PixelHeight;
                     int width = loadedBitmap.PixelWidth;
+                    int bytesPerPixel = 3; // Format RGB24 czyli jest x3
 
                     WriteableBitmap filteredBitmap = new WriteableBitmap(loadedBitmap);
 
                     filteredBitmap.Lock();
                     try
                     {
-                        int length = width * height * 3;
+                        int length = width * height * bytesPerPixel;
                         byte[] pixelData = new byte[length];
-
                         IntPtr pBackBuffer = filteredBitmap.BackBuffer;
                         Marshal.Copy(pBackBuffer, pixelData, 0, length);
 
                         int baseSegmentHeight = height / numThreads;
                         int extraRows = height % numThreads;
 
-                        int[] segmentHeights = new int[numThreads];
-                        for (int i = 0; i < numThreads; i++)
+                        int[] startYs = new int[numThreads];
+                        int[] endYs = new int[numThreads];
+
+                        startYs[0] = 0;
+                        endYs[0] = baseSegmentHeight + (extraRows > 0 ? 1 : 0) - 1;
+
+                        for (int i = 1; i < numThreads; i++)
                         {
-                            segmentHeights[i] = baseSegmentHeight;
-                            if (i < extraRows)
-                            {
-                                segmentHeights[i]++;
-                            }
+                            startYs[i] = endYs[i - 1] + 1;
+                            endYs[i] = startYs[i] + baseSegmentHeight + (i < extraRows ? 1 : 0) - 1;
                         }
+
+                        endYs[numThreads - 1] = height - 1;  // Ostatni wątek kończy na ostatnim wierszu
 
                         bool cppButton = (bool)CRB.IsChecked;
                         bool asmButton = (bool)ARB.IsChecked;
 
                         Stopwatch stopwatch = Stopwatch.StartNew();
+                        StringBuilder logBuilder = new StringBuilder();
 
                         Parallel.For(0, numThreads, i =>
                         {
-                            int startY = 0;
-                            for (int j = 0; j < i; j++)
-                            {
-                                startY += segmentHeights[j];
-                            }
-                            int segmentHeight = segmentHeights[i];
+                            int startY = startYs[i];
+                            int endY = endYs[i];
 
-                            int startIdx = startY * width * 3;
+                            int startIdx = startY * width * bytesPerPixel;
+
+                            logBuilder.AppendLine($"Wątek {i}: startY = {startY}, endY = {endY}, startIdx = {startIdx}");
 
                             if (asmButton)
-                                Darken(ref pixelData[startIdx], segmentHeight * width * 3);
+                            {
+                                Darken(ref pixelData[startIdx], width, startY, endY - startY + 1);
+                            }
                             else if (cppButton)
-                                Darken2(ref pixelData[startIdx], width, startY, segmentHeight);
-                            else
-                                Debug.WriteLine("Bez filtrowania - nie wybrano trybu");
+                            {
+                                Darken2(ref pixelData[startIdx], width, startY, endY - startY + 1);
+                            }
                         });
 
+                        // Kopiowanie zmodyfikowanych danych z powrotem do bitmapy
                         Marshal.Copy(pixelData, 0, pBackBuffer, length);
-
                         stopwatch.Stop();
-                        TimeSpan ts = stopwatch.Elapsed;
 
-                        TimerText.Text = $"Czas przetwarzania: {ts.TotalMilliseconds} ms";
+                        // Wyświetlanie czasu przetwarzania
+                        logBuilder.AppendLine($"Czas przetwarzania: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                        TimerText.Text = logBuilder.ToString();
                     }
                     finally
                     {
                         filteredBitmap.Unlock();
                     }
 
+                    // Ustawianie przetworzonego obrazu
                     FilteredImage.Source = filteredBitmap;
                 }
                 else
                 {
-                    Debug.WriteLine("Proszę wybrać prawidłową liczbę wątków.");
+                    TimerText.Text = "Proszę wybrać prawidłową liczbę wątków.";
                 }
             }
             else
             {
-                Debug.WriteLine("Proszę wybrać liczbę wątków z listy.");
+                TimerText.Text = "Proszę wybrać liczbę wątków z listy.";
             }
         }
-
-
-
 
         private void ImageDragEnter(object sender, DragEventArgs e)
         {
@@ -123,7 +130,6 @@ namespace SquareFilter
                 if (files != null && IsValidImageFile(files[0]))
                 {
                     e.Effects = DragDropEffects.Copy;
-                    Debug.WriteLine($"Plik {files[0]} został rozpoznany jako obraz.");
                 }
                 else
                 {
@@ -143,17 +149,12 @@ namespace SquareFilter
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (files != null && IsValidImageFile(files[0]))
                 {
-                    Debug.WriteLine($"Ustawianie obrazu: {files[0]}");
                     SetImage(files[0]);
                 }
                 else
                 {
-                    Debug.WriteLine("Nieprawidłowy plik obrazu.");
+                    Console.WriteLine("Nieprawidłowy plik obrazu.");
                 }
-            }
-            else
-            {
-                Debug.WriteLine("Brak obsługiwanego formatu danych.");
             }
         }
 
@@ -167,16 +168,14 @@ namespace SquareFilter
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.EndInit();
 
-                // Konwersja do formatu RGB (24bpp)
                 FormatConvertedBitmap rgbBitmap = new FormatConvertedBitmap(bitmapImage, PixelFormats.Rgb24, null, 0);
                 loadedBitmap = rgbBitmap;
 
                 image.Source = loadedBitmap;
-                Debug.WriteLine("Obraz został pomyślnie ustawiony jako RGB.");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Błąd podczas ładowania obrazu: {ex.Message}");
+                Console.WriteLine($"Błąd podczas ładowania obrazu: {ex.Message}");
             }
         }
 
