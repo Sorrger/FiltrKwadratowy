@@ -2,9 +2,9 @@
 ;INCLUDE C:\masm32\include\windows.inc
 
 .DATA
-mask_value dq 0.04166667, 0.04166667, 0.04166667, 0.04166667  ; Wartoœæ maski (1/24 dla normalizacji)
-max_value  db 255, 255, 255, 255, 255, 255, 255, 255          ; Maksymalna wartoœæ dla kolorów (RGB 8-bit)
-zero_value dq 0.0, 0.0, 0.0, 0.0                             ; Zero dla przycinania wyników
+mask_value dq 0.04, 0.04, 0.04, 0.04        ; Zmieniona wartoœæ maski (1/25)
+max_value db 255, 255, 255, 255, 255, 255, 255, 255 ; Maksymalna wartoœæ dla kolorów (RGB 8-bit)
+zero_value dq 0.0, 0.0, 0.0, 0.0           ; Zero dla przycinania wyników
 
 .CODE
 
@@ -18,17 +18,19 @@ Darken PROC
     push rsi                    ; Zapisz rejestry
     push rdi
 
+    ; Oblicz przesuniêcie dla startY
     mov rbx, r8                 ; rbx = startY
     imul rbx, rdx               ; rbx = startY * szerokoœæ
     imul rbx, 3                 ; rbx = startY * szerokoœæ * 3 (format RGB)
-    add rcx, rbx                ; Adjust rcx by the startY
+    add rcx, rbx                ; rcx = wskaŸnik pocz¹tkowy segmentu
 
+    ; Oblicz koniec segmentu
     mov rsi, r9                 ; rsi = segmentHeight
     add rsi, r8                 ; rsi = endY (startY + segmentHeight)
 
 apply_filter:
+    ; Ustawienie pocz¹tkowych indeksów
     mov rdi, 0                  ; rdi = poziomy offset w wierszu
-
 row_loop:
     cmp r8, rsi                 ; Czy r8 (aktualny wiersz) przekroczy³ segmentHeight?
     jge end_function            ; Zakoñcz jeœli tak
@@ -44,33 +46,33 @@ pixel_loop:
     movdqu xmm0, xmmword ptr [rax]
 
     ; Zresetuj sumy dla maski
-    pxor xmm1, xmm1
+    pxor xmm1, xmm1             ; Zerowanie xmm1 (sumowanie)
 
-    ; Iteruj po s¹siednich pikselach w oknie 5x5
-    mov rcx, -2                 ; rcx = pocz¹tek wierszy maski (-2)
+    ; Iteracja po s¹siednich pikselach w oknie 5x5
+    mov r10, -2                 ; r10 = wiersz maski (-2)
 mask_row:
-    mov rbx, -2                 ; rbx = pocz¹tek kolumn maski (-2)
+    mov r11, -2                 ; r11 = kolumna maski (-2)
 mask_col:
-    ; Oblicz wspó³rzêdne s¹siednich pikseli
-    mov rax, rcx
-    imul rax, rdx               ; rax = rcx * szerokoœæ
-    imul rax, 3                 ; rax = rcx * szerokoœæ * 3 (RGB)
-    add rax, rbx                ; rax += rbx (offset kolumny)
+    ; Oblicz wspó³rzêdne s¹siedniego piksela
+    mov rax, r10
+    imul rax, rdx               ; rax = r10 * szerokoœæ
+    imul rax, 3                 ; rax = r10 * szerokoœæ * 3 (RGB)
+    add rax, r11                ; rax += r11 (offset kolumny)
     add rax, rdi                ; rax += poziomy offset
 
-    ; SprawdŸ, czy s¹siad jest w obrêbie obrazu
-    mov r10, rcx                ; SprawdŸ zakres wierszy
-    add r10, r8                 ; r10 = aktualny wiersz (r8 + rcx)
-    cmp r10, 0                  ; Upewnij siê, ¿e r10 >= 0
+    ; SprawdŸ, czy s¹siad jest w obrêbie segmentu
+    mov rbx, r10                ; SprawdŸ wiersze
+    add rbx, r8
+    cmp rbx, 0
     jl skip_neighbor
-    cmp r10, rsi                ; Upewnij siê, ¿e r10 < segmentHeight
+    cmp rbx, rsi
     jge skip_neighbor
 
-    mov r10, rbx                ; SprawdŸ zakres kolumn
-    add r10, rdi                ; r10 = aktualna kolumna (rdi + rbx)
-    cmp r10, 0                  ; Upewnij siê, ¿e r10 >= 0
+    mov rbx, r11                ; SprawdŸ kolumny
+    add rbx, rdi
+    cmp rbx, 0
     jl skip_neighbor
-    cmp r10, rdx                ; Upewnij siê, ¿e r10 < szerokoœæ
+    cmp rbx, rdx
     jge skip_neighbor
 
     ; Za³aduj s¹siedni piksel do xmm2
@@ -82,18 +84,18 @@ mask_col:
     addps xmm1, xmm2
 
 skip_neighbor:
-    inc rbx                     ; PrzejdŸ do nastêpnej kolumny maski
-    cmp rbx, 2
+    inc r11                     ; Nastêpna kolumna w masce
+    cmp r11, 2
     jle mask_col
 
-    inc rcx                     ; PrzejdŸ do nastêpnego wiersza maski
-    cmp rcx, 2
+    inc r10                     ; Nastêpny wiersz w masce
+    cmp r10, 2
     jle mask_row
 
     ; Przypisz now¹ wartoœæ do piksela (œrednia)
     movaps xmm2, xmm1
-    maxps xmm2, xmmword ptr [zero_value]     ; Zapewnij, ¿e wynik nie jest mniejszy ni¿ 0
-    minps xmm2, xmmword ptr [max_value]      ; Zapewnij, ¿e wynik nie przekroczy 255
+    maxps xmm2, xmmword ptr [zero_value]     ; Upewnij siê, ¿e wynik >= 0
+    minps xmm2, xmmword ptr [max_value]      ; Upewnij siê, ¿e wynik <= 255
     movdqu xmmword ptr [rax], xmm2
 
     ; PrzejdŸ do nastêpnego piksela
@@ -103,8 +105,7 @@ skip_neighbor:
 
 next_row:
     inc r8                      ; PrzejdŸ do nastêpnego wiersza
-    imul rax, rdx, 3            ; rax = offset wiersza (rdx * 3)
-    add rcx, rax                ; Przesuñ wskaŸnik do nastêpnego wiersza w danych pikseli
+    add rcx, rdx                ; Przesuñ wskaŸnik do nastêpnego wiersza
     jmp row_loop
 
 end_function:

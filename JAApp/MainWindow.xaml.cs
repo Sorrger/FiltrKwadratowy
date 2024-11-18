@@ -15,12 +15,11 @@ namespace SquareFilter
     {
         private BitmapSource loadedBitmap;
 
-        // Importowanie funkcji z bibliotek DLL
-        [DllImport("/../../../../x64/Debug/JADll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Darken(ref byte pixelData, int width, int startY, int segmentHeight);
+        [DllImport("/../../../../x64/Release/JADll.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern void Darken(IntPtr pixelData, int width, int startY, int segmentHeight);
 
-        [DllImport("/../../../../x64/Debug/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Darken2(ref byte pixelData, int width, int startY, int segmentHeight);
+        [DllImport("/../../../../x64/Release/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern void Darken2(IntPtr pixelData, int width, int startY, int segmentHeight, int imageHeight);
 
         public MainWindow()
         {
@@ -41,7 +40,7 @@ namespace SquareFilter
                 {
                     int height = loadedBitmap.PixelHeight;
                     int width = loadedBitmap.PixelWidth;
-                    int bytesPerPixel = 3; // Format RGB24 czyli jest x3
+                    int bytesPerPixel = 3; // Format RGB24, czyli x3
 
                     WriteableBitmap filteredBitmap = new WriteableBitmap(loadedBitmap);
 
@@ -53,22 +52,26 @@ namespace SquareFilter
                         IntPtr pBackBuffer = filteredBitmap.BackBuffer;
                         Marshal.Copy(pBackBuffer, pixelData, 0, length);
 
+                        // Przypięcie tablicy pixelData do pamięci, by uniknąć problemów z GC
+                        GCHandle handle = GCHandle.Alloc(pixelData, GCHandleType.Pinned);
+                        IntPtr pixelDataPtr = Marshal.UnsafeAddrOfPinnedArrayElement(pixelData, 0);
+
+                        // Obliczanie optymalnego podziału w pionie
                         int baseSegmentHeight = height / numThreads;
                         int extraRows = height % numThreads;
 
                         int[] startYs = new int[numThreads];
                         int[] endYs = new int[numThreads];
 
-                        startYs[0] = 0;
-                        endYs[0] = baseSegmentHeight + (extraRows > 0 ? 1 : 0) - 1;
-
-                        for (int i = 1; i < numThreads; i++)
+                        // Obliczanie start i end Y dla każdego wątku
+                        int currentStartY = 0;
+                        for (int i = 0; i < numThreads; i++)
                         {
-                            startYs[i] = endYs[i - 1] + 1;
-                            endYs[i] = startYs[i] + baseSegmentHeight + (i < extraRows ? 1 : 0) - 1;
+                            int segmentHeight = baseSegmentHeight + (i < extraRows ? 1 : 0);
+                            startYs[i] = currentStartY;
+                            endYs[i] = currentStartY + segmentHeight - 1;
+                            currentStartY = endYs[i] + 1; // Kolejny segment zaczyna się od następnego wiersza
                         }
-
-                        endYs[numThreads - 1] = height - 1;  // Ostatni wątek kończy na ostatnim wierszu
 
                         bool cppButton = (bool)CRB.IsChecked;
                         bool asmButton = (bool)ARB.IsChecked;
@@ -76,22 +79,21 @@ namespace SquareFilter
                         Stopwatch stopwatch = Stopwatch.StartNew();
                         StringBuilder logBuilder = new StringBuilder();
 
+                        // Parallel processing of image sections
                         Parallel.For(0, numThreads, i =>
                         {
                             int startY = startYs[i];
-                            int endY = endYs[i];
+                            int segmentHeight = endYs[i] - startY + 1;
 
-                            int startIdx = startY * width * bytesPerPixel;
+                            logBuilder.AppendLine($"Wątek {i}: startY = {startY}, segmentHeight = {segmentHeight}");
 
-                            logBuilder.AppendLine($"Wątek {i}: startY = {startY}, endY = {endY}, startIdx = {startIdx}");
-
-                            if (asmButton)
+                            if (cppButton)
                             {
-                                Darken(ref pixelData[startIdx], width, startY, endY - startY + 1);
+                                Darken2(pixelDataPtr, width, startY, segmentHeight, height);
                             }
-                            else if (cppButton)
+                            else if (asmButton)
                             {
-                                Darken2(ref pixelData[startIdx], width, startY, endY - startY + 1);
+                                Darken(pixelDataPtr, width, startY, segmentHeight);
                             }
                         });
 
@@ -102,6 +104,9 @@ namespace SquareFilter
                         // Wyświetlanie czasu przetwarzania
                         logBuilder.AppendLine($"Czas przetwarzania: {stopwatch.Elapsed.TotalMilliseconds} ms");
                         TimerText.Text = logBuilder.ToString();
+
+                        // Zwalnianie zasobów
+                        handle.Free();
                     }
                     finally
                     {
@@ -121,6 +126,9 @@ namespace SquareFilter
                 TimerText.Text = "Proszę wybrać liczbę wątków z listy.";
             }
         }
+
+
+
 
         private void ImageDragEnter(object sender, DragEventArgs e)
         {
