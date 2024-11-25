@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace SquareFilter
 {
@@ -16,7 +17,7 @@ namespace SquareFilter
         private BitmapSource loadedBitmap;
 
         [DllImport("/../../../../x64/Release/JADll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Darken(IntPtr pixelData, int width, int startY, int segmentHeight);
+        public static extern void Darken(IntPtr pixelData, int width, int startY, int segmentHeight, int imageHeight);
 
         [DllImport("/../../../../x64/Release/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Darken2(IntPtr pixelData, int width, int startY, int segmentHeight, int imageHeight);
@@ -70,7 +71,7 @@ namespace SquareFilter
                             int segmentHeight = baseSegmentHeight + (i < extraRows ? 1 : 0);
                             startYs[i] = currentStartY;
                             endYs[i] = currentStartY + segmentHeight - 1;
-                            currentStartY = endYs[i] + 1; // Kolejny segment zaczyna się od następnego wiersza
+                            currentStartY = endYs[i] + 1;
                         }
 
                         bool cppButton = (bool)CRB.IsChecked;
@@ -85,7 +86,7 @@ namespace SquareFilter
                             int startY = startYs[i];
                             int segmentHeight = endYs[i] - startY + 1;
 
-                            logBuilder.AppendLine($"Wątek {i}: startY = {startY}, segmentHeight = {segmentHeight}");
+                            //logBuilder.AppendLine($"Wątek {i}: startY = {startY}, segmentHeight = {segmentHeight}");
 
                             if (cppButton)
                             {
@@ -93,19 +94,16 @@ namespace SquareFilter
                             }
                             else if (asmButton)
                             {
-                                Darken(pixelDataPtr, width, startY, segmentHeight);
+                                Darken(pixelDataPtr, width, startY, segmentHeight, height);
                             }
                         });
 
-                        // Kopiowanie zmodyfikowanych danych z powrotem do bitmapy
                         Marshal.Copy(pixelData, 0, pBackBuffer, length);
                         stopwatch.Stop();
 
-                        // Wyświetlanie czasu przetwarzania
                         logBuilder.AppendLine($"Czas przetwarzania: {stopwatch.Elapsed.TotalMilliseconds} ms");
                         TimerText.Text = logBuilder.ToString();
 
-                        // Zwalnianie zasobów
                         handle.Free();
                     }
                     finally
@@ -115,6 +113,7 @@ namespace SquareFilter
 
                     // Ustawianie przetworzonego obrazu
                     FilteredImage.Source = filteredBitmap;
+                    SaveImage(filteredBitmap);
                 }
                 else
                 {
@@ -191,6 +190,34 @@ namespace SquareFilter
         {
             string extension = Path.GetExtension(filePath)?.ToLower();
             return extension == ".png" || extension == ".jpg" || extension == ".jpeg" || extension == ".bmp";
+        }
+
+        private void SaveImage(WriteableBitmap bitmap)
+        {
+            // Otwórz okno dialogowe, aby wybrać lokalizację i nazwę pliku
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "PNG Files (*.png)|*.png|JPEG Files (*.jpg)|*.jpg|BMP Files (*.bmp)|*.bmp",
+                DefaultExt = ".png",
+                AddExtension = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                // Zapisz obraz do pliku
+                string filePath = saveFileDialog.FileName;
+
+                // Tworzymy encodera PNG (można zmienić format na inny)
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmap));
+
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                {
+                    encoder.Save(stream);
+                }
+
+                MessageBox.Show($"Obraz zapisano do {filePath}", "Zapisano", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

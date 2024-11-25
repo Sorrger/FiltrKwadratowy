@@ -1,11 +1,3 @@
-﻿  DarkenImage.cpp
-C:\Users\Sorrg\Source\Repos\Sorrger\SquareFilter\CPPDLL\DarkenImage.cpp(8,18): warning C4244: "inicjowanie": konwersja z "float" do "int", możliwa utrata danych
-  (kompilowanie pliku źródłowego „/DarkenImage.cpp”)
-  
-C:\Users\Sorrg\Source\Repos\Sorrger\SquareFilter\CPPDLL\DarkenImage.cpp(11,19): warning C4244: "inicjowanie": konwersja z "float" do "int", możliwa utrata danych
-  (kompilowanie pliku źródłowego „/DarkenImage.cpp”)
-  
-C:\Users\Sorrg\Source\Repos\Sorrger\SquareFilter\CPPDLL\DarkenImage.cpp(14,17): warning C4244: "inicjowanie": konwersja z "float" do "int", możliwa utrata danych
-  (kompilowanie pliku źródłowego „/DarkenImage.cpp”)
-  
+﻿  LINK : nie znaleziono elementu C:\Users\Sorrg\source\repos\Sorrger\SquareFilter\x64\Debug\CPPDLL.dll ani nie został on skompilowany podczas ostatniego konsolidowania przyrostowego; zostanie wykonana pełna konsolidacja
+     Trwa tworzenie biblioteki C:\Users\Sorrg\source\repos\Sorrger\SquareFilter\x64\Debug\CPPDLL.lib i obiektu C:\Users\Sorrg\source\repos\Sorrger\SquareFilter\x64\Debug\CPPDLL.exp
   CPPDLL.vcxproj -> C:\Users\Sorrg\source\repos\Sorrger\SquareFilter\x64\Debug\CPPDLL.dll

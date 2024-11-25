@@ -1,116 +1,93 @@
-;.586
-;INCLUDE C:\masm32\include\windows.inc
-
 .DATA
-mask_value dq 0.04, 0.04, 0.04, 0.04        ; Zmieniona wartoœæ maski (1/25)
-max_value db 255, 255, 255, 255, 255, 255, 255, 255 ; Maksymalna wartoœæ dla kolorów (RGB 8-bit)
-zero_value dq 0.0, 0.0, 0.0, 0.0           ; Zero dla przycinania wyników
+white_value db 255, 255, 255   ; Kolor bia³y (RGB)
 
 .CODE
-
 Darken PROC
-    ; Argumenty:
-    ; rcx - wskaŸnik do danych pikseli
-    ; rdx - szerokoœæ obrazu (w pikselach)
-    ; r8  - startY (pocz¹tek segmentu)
-    ; r9  - segmentHeight (wysokoœæ segmentu)
-
-    push rsi                    ; Zapisz rejestry
+    push rsi
     push rdi
+    push rbx
 
-    ; Oblicz przesuniêcie dla startY
-    mov rbx, r8                 ; rbx = startY
-    imul rbx, rdx               ; rbx = startY * szerokoœæ
-    imul rbx, 3                 ; rbx = startY * szerokoœæ * 3 (format RGB)
-    add rcx, rbx                ; rcx = wskaŸnik pocz¹tkowy segmentu
+    ; Pobierz imageHeight, startY oraz segmentHeight
+    mov r10, [rsp + 40]         ; r10 = imageHeight
+    mov r11, r8                 ; r11 = startY (pocz¹tek wiersza)
+    mov r12, r9                 ; r12 = segmentHeight (wysokoœæ segmentu)
 
-    ; Oblicz koniec segmentu
-    mov rsi, r9                 ; rsi = segmentHeight
-    add rsi, r8                 ; rsi = endY (startY + segmentHeight)
+    ; Dopasowanie wartoœci koñca segmentu, jeœli przekracza wymiary obrazu
+    add r11, r12                ; r11 = startY + segmentHeight
+    cmp r11, r10
+    jle no_adjust_end
+    mov r11, r10                ; Jeœli koniec segmentu przekracza obraz, ustaw go na imageHeight
+no_adjust_end:
 
-apply_filter:
-    ; Ustawienie pocz¹tkowych indeksów
-    mov rdi, 0                  ; rdi = poziomy offset w wierszu
+    ; Ustaw wskaŸnik na startY
+    cmp r8, r10
+    jge end_function            ; Jeœli startY >= imageHeight, zakoñcz
+
+    ; Pêtla po wierszach (r8 = aktualny wiersz)
 row_loop:
-    cmp r8, rsi                 ; Czy r8 (aktualny wiersz) przekroczy³ segmentHeight?
-    jge end_function            ; Zakoñcz jeœli tak
+    cmp r8, r11
+    jge end_function            ; Jeœli r8 >= endY, zakoñcz
 
-    mov rdi, 0                  ; Resetuj poziomy indeks dla ka¿dego wiersza
+    ; Pomiñ dwa górne wiersze w górnym segmencie obrazu   - dziala
+    cmp r8, 2
+    jl skip_top_rows            ; Jeœli wiersz < 2, pomin¹æ (przeskocz)
+    
+    ; imageHeight - 2
+    sub r10, 2               ; Teraz r10 = imageHeight - 2
+
+    ; Pomiñ dwa dolne wiersze w dolnym segmencie obrazu  - dziala
+    cmp r8, r10              ; SprawdŸ, czy aktualny wiersz r8 >= (imageHeight - 2)
+    jge end_function         ; Jeœli wiersz >= imageHeight - 2, zakoñcz funkcjê
+
+    ; Przywróæ wartoœæ imageHeight do r10
+    add r10, 2   
+
+    mov rsi, 2                  ; Pocz¹tek kolumny (pomijamy 2 kolumny brzegowe)
+
+    ; Pêtla po kolumnach w wierszu (rsi = aktualna kolumna)
 pixel_loop:
-    cmp rdi, rdx                ; Czy rdi (kolumna) przekroczy³a szerokoœæ obrazu?
-    jge next_row
+    
+    sub rdx, 2
 
-    ; Za³aduj aktualny piksel do xmm0
-    mov rax, rcx
-    add rax, rdi                ; Oblicz offset pikseli
-    movdqu xmm0, xmmword ptr [rax]
+    cmp rsi, rdx                ; Porównaj rsi (kolumna) z szerokoœci¹ obrazu (rdx)
+    jge next_row                ; Jeœli rsi >= imageWidth - 2, przejdŸ do nastêpnego wiersza
 
-    ; Zresetuj sumy dla maski
-    pxor xmm1, xmm1             ; Zerowanie xmm1 (sumowanie)
+    add rdx, 2
 
-    ; Iteracja po s¹siednich pikselach w oknie 5x5
-    mov r10, -2                 ; r10 = wiersz maski (-2)
-mask_row:
-    mov r11, -2                 ; r11 = kolumna maski (-2)
-mask_col:
-    ; Oblicz wspó³rzêdne s¹siedniego piksela
-    mov rax, r10
-    imul rax, rdx               ; rax = r10 * szerokoœæ
-    imul rax, 3                 ; rax = r10 * szerokoœæ * 3 (RGB)
-    add rax, r11                ; rax += r11 (offset kolumny)
-    add rax, rdi                ; rax += poziomy offset
+    ; Oblicz wskaŸnik do bie¿¹cego piksela
+    mov rdi, r8                 ; rdi = aktualny wiersz
+    imul rdi, rdx               ; rdi = rdi * imageWidth
+    add rdi, rsi                ; rdi = rdi + column
+    imul rdi, 3                 ; rdi = rdi * 3 (RGB)
+    lea rbx, [rcx + rdi]        ; rbx = wskaŸnik do bie¿¹cego piksela
 
-    ; SprawdŸ, czy s¹siad jest w obrêbie segmentu
-    mov rbx, r10                ; SprawdŸ wiersze
-    add rbx, r8
-    cmp rbx, 0
-    jl skip_neighbor
-    cmp rbx, rsi
-    jge skip_neighbor
+    ; Zmieñ wartoœæ piksela na bia³y (zapis RGB)
+    mov byte ptr [rbx], 255     ; R
+    mov byte ptr [rbx + 1], 255 ; G
+    mov byte ptr [rbx + 2], 255 ; B
 
-    mov rbx, r11                ; SprawdŸ kolumny
-    add rbx, rdi
-    cmp rbx, 0
-    jl skip_neighbor
-    cmp rbx, rdx
-    jge skip_neighbor
-
-    ; Za³aduj s¹siedni piksel do xmm2
-    add rax, rcx
-    movdqu xmm2, xmmword ptr [rax]
-
-    ; Pomnó¿ przez wartoœæ maski i dodaj do sumy
-    mulps xmm2, xmmword ptr [mask_value]
-    addps xmm1, xmm2
-
-skip_neighbor:
-    inc r11                     ; Nastêpna kolumna w masce
-    cmp r11, 2
-    jle mask_col
-
-    inc r10                     ; Nastêpny wiersz w masce
-    cmp r10, 2
-    jle mask_row
-
-    ; Przypisz now¹ wartoœæ do piksela (œrednia)
-    movaps xmm2, xmm1
-    maxps xmm2, xmmword ptr [zero_value]     ; Upewnij siê, ¿e wynik >= 0
-    minps xmm2, xmmword ptr [max_value]      ; Upewnij siê, ¿e wynik <= 255
-    movdqu xmmword ptr [rax], xmm2
-
-    ; PrzejdŸ do nastêpnego piksela
-    add rdi, 3                  ; Przesuñ o 3 bajty (RGB)
-    cmp rdi, rdx
-    jl pixel_loop
+    add rsi, 1                  ; PrzejdŸ do nastêpnej kolumny
+    jmp pixel_loop
 
 next_row:
-    inc r8                      ; PrzejdŸ do nastêpnego wiersza
-    add rcx, rdx                ; Przesuñ wskaŸnik do nastêpnego wiersza
+    inc r8
+    add rdx, 2
+    jmp row_loop
+
+skip_top_rows:
+    ; Pomiñ dwie pierwsze kolumny, ale wejdŸ do pêtli wierszy
+    add r8, 2
+    jmp row_loop
+
+skip_bottom_rows:
+    ; Pomiñ dwie ostatnie kolumny, ale wejdŸ do pêtli wierszy
+    sub r8, 2
     jmp row_loop
 
 end_function:
-    pop rsi
+    pop rbx
     pop rdi
+    pop rsi
     ret
 Darken ENDP
 END
