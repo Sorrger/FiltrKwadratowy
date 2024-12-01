@@ -2,13 +2,12 @@
 #include <vector>
 #include <algorithm>
 
-extern "C" __declspec(dllexport) void Darken2(unsigned char* pixelData, int width, int startY, int segmentHeight, int imageHeight) {
+extern "C" __declspec(dllexport) void Darken2(unsigned char* pixelData, int width, int startY, int endY, int imageHeight) {
     const int maskSize = 5;
     const int halfMask = maskSize / 2;
     const float maskValue = 1.0f / 25.0f;
 
-    int endY = startY + segmentHeight;
-
+    // Iterujemy po wierszach od startY do endY
     for (int y = startY; y < endY; ++y) {
         for (int x = 0; x < width; ++x) {
             float sumBlue = 0.0f, sumGreen = 0.0f, sumRed = 0.0f;
@@ -34,4 +33,3 @@ extern "C" __declspec(dllexport) void Darken2(unsigned char* pixelData, int widt
         }
     }
 }
-

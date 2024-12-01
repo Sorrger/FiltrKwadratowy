@@ -17,10 +17,10 @@ namespace SquareFilter
         private BitmapSource loadedBitmap;
 
         [DllImport("/../../../../x64/Release/JADll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Darken(IntPtr pixelData, int width, int startY, int segmentHeight, int imageHeight);
+        public static extern void Darken(IntPtr pixelData, int width, int startY, int endY, int imageHeight);
 
         [DllImport("/../../../../x64/Release/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Darken2(IntPtr pixelData, int width, int startY, int segmentHeight, int imageHeight);
+        public static extern void Darken2(IntPtr pixelData, int width, int startY, int endY, int imageHeight);
 
         public MainWindow()
         {
@@ -64,14 +64,15 @@ namespace SquareFilter
                         int[] startYs = new int[numThreads];
                         int[] endYs = new int[numThreads];
 
-                        // Obliczanie start i end Y dla każdego wątku
+                        // Obliczanie startY i endY dla każdego wątku
                         int currentStartY = 0;
                         for (int i = 0; i < numThreads; i++)
                         {
                             int segmentHeight = baseSegmentHeight + (i < extraRows ? 1 : 0);
                             startYs[i] = currentStartY;
-                            endYs[i] = currentStartY + segmentHeight - 1;
-                            currentStartY = endYs[i] + 1;
+                            endYs[i] = currentStartY + segmentHeight;
+
+                            currentStartY += segmentHeight;
                         }
 
                         bool cppButton = (bool)CRB.IsChecked;
@@ -84,19 +85,18 @@ namespace SquareFilter
                         Parallel.For(0, numThreads, i =>
                         {
                             int startY = startYs[i];
-                            int segmentHeight = endYs[i] - startY + 1;
-
-                            //logBuilder.AppendLine($"Wątek {i}: startY = {startY}, segmentHeight = {segmentHeight}");
+                            int endY = endYs[i];
 
                             if (cppButton)
                             {
-                                Darken2(pixelDataPtr, width, startY, segmentHeight, height);
+                                Darken2(pixelDataPtr, width, startY, endY, height);
                             }
                             else if (asmButton)
                             {
-                                Darken(pixelDataPtr, width, startY, segmentHeight, height);
+                                Darken(pixelDataPtr, width, startY, endY, height);
                             }
                         });
+
 
                         Marshal.Copy(pixelData, 0, pBackBuffer, length);
                         stopwatch.Stop();
