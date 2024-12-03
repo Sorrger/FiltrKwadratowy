@@ -1,8 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\JAApp"
+    "\\JADll"
   ],
-  "SelectedNode": "\\JAApp\\MainWindow.xaml.cs",
+  "SelectedNode": "\\JADll\\mydll.asm",
   "PreviewInSolutionExplorer": false
 }
