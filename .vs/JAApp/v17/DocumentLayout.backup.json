@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|solutionrelative:JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|solutionrelative:CPPDLL\\DarkenImage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -18,11 +22,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "JAApp\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
+              "RelativeToolTip": "JAApp\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAArwF8AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-03T17:25:48.194Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "DarkenImage.cpp",
               "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp",
               "RelativeDocumentMoniker": "CPPDLL\\DarkenImage.cpp",
@@ -40,7 +57,7 @@
               "RelativeDocumentMoniker": "JADll\\mydll.asm",
               "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm",
               "RelativeToolTip": "JADll\\mydll.asm",
-              "ViewState": "AgIAAAoBAAAAAAAAAAAcwCsBAAADAAAAAAAAAA==",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAiwJwAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2024-11-30T11:23:21.211Z",
               "EditorCaption": ""

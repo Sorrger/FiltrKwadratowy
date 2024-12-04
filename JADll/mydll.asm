@@ -41,187 +41,17 @@ col_loop:
     pxor xmm2, xmm2            ; sumRed
 
     ; RÍczne sumowanie pikseli w sπsiedztwie 5x5
-    ; Iteracja po przesuniÍciach pionowych (-2 do +2)
-    mov ecx, r12d             ; y
-    sub ecx, 2                 ; y-2
-    cmp ecx, 0
-    jl skip_row_minus_2
-    mov esi, ecx
-    imul esi, r13d            ; y_offset * width
-    add esi, r14d              ; + x
-    imul esi, 3                ; *3 (B, G, R)
-    ; Teraz esi = (y-2) * width + x) * 3
-    ; Dodanie sumowania poziomych x_offsets (-2 do +2)
-    mov r15d, -2              ; x_offset start
-sum_x_offsets_minus_2:
-    ; Oblicz x_new = x + x_offset
-    mov eax, r14d
-    add eax, r15d
-    ; Sprawdü granice x
-    cmp eax, 0
-    jl skip_x_offset_minus_2
-    cmp eax, r13d
-    jge skip_x_offset_minus_2
-    ; Oblicz indeks pikselu: (y_new * width + x_new) * 3
-    mov edx, ecx              ; y_new = y-2
-    imul edx, r13d            ; y_new * width
-    add edx, eax              ; + x_new
-    imul edx, 3                ; *3
-    ; Ustaw rsi na indeks pikselu
-    mov esi, edx
-    ; Dodaj piksel do sumy
-    call sum_pixels_row
-skip_x_offset_minus_2:
-    ; Inkrementuj x_offset
-    add r15d, 1
-    cmp r15d, 2
-    jle sum_x_offsets_minus_2
-
-skip_row_minus_2:
-
-    ; Rzπd -1
     mov ecx, r12d
-    sub ecx, 1
-    cmp ecx, 0
-    jl skip_row_minus_1
-    mov esi, ecx
-    imul esi, r13d
-    add esi, r14d
-    imul esi, 3
-    ; Dodanie sumowania poziomych x_offsets (-2 do +2)
-    mov r15d, -2              ; x_offset start
-sum_x_offsets_minus_1:
-    ; Oblicz x_new = x + x_offset
-    mov eax, r14d
-    add eax, r15d
-    ; Sprawdü granice x
-    cmp eax, 0
-    jl skip_x_offset_minus_1
-    cmp eax, r13d
-    jge skip_x_offset_minus_1
-    ; Oblicz indeks pikselu: (y_new * width + x_new) * 3
-    mov edx, ecx              ; y_new = y-1
-    imul edx, r13d            ; y_new * width
-    add edx, eax              ; + x_new
-    imul edx, 3                ; *3
-    ; Ustaw rsi na indeks pikselu
-    mov esi, edx
-    ; Dodaj piksel do sumy
-    call sum_pixels_row
-skip_x_offset_minus_1:
-    ; Inkrementuj x_offset
-    add r15d, 1
-    cmp r15d, 2
-    jle sum_x_offsets_minus_1
-
-skip_row_minus_1:
-
-    ; Rzπd 0
-    mov ecx, r12d
-    ; (y_new = y)
-    ; Dodanie sumowania poziomych x_offsets (-2 do +2)
-    mov esi, ecx
-    imul esi, r13d
-    add esi, r14d
-    imul esi, 3
-    mov r15d, -2              ; x_offset start
-sum_x_offsets_0:
-    ; Oblicz x_new = x + x_offset
-    mov eax, r14d
-    add eax, r15d
-    ; Sprawdü granice x
-    cmp eax, 0
-    jl skip_x_offset_0
-    cmp eax, r13d
-    jge skip_x_offset_0
-    ; Oblicz indeks pikselu: (y_new * width + x_new) * 3
-    mov edx, ecx              ; y_new = y
-    imul edx, r13d            ; y_new * width
-    add edx, eax              ; + x_new
-    imul edx, 3                ; *3
-    ; Ustaw rsi na indeks pikselu
-    mov esi, edx
-    ; Dodaj piksel do sumy
-    call sum_pixels_row
-skip_x_offset_0:
-    ; Inkrementuj x_offset
-    add r15d, 1
-    cmp r15d, 2
-    jle sum_x_offsets_0
-
-    ; Rzπd +1
-    mov ecx, r12d
-    add ecx, 1
-    cmp ecx, r10d
-    jge skip_row_plus_1
-    mov esi, ecx
-    imul esi, r13d
-    add esi, r14d
-    imul esi, 3
-    ; Dodanie sumowania poziomych x_offsets (-2 do +2)
-    mov r15d, -2              ; x_offset start
-sum_x_offsets_plus_1:
-    ; Oblicz x_new = x + x_offset
-    mov eax, r14d
-    add eax, r15d
-    ; Sprawdü granice x
-    cmp eax, 0
-    jl skip_x_offset_plus_1
-    cmp eax, r13d
-    jge skip_x_offset_plus_1
-    ; Oblicz indeks pikselu: (y_new * width + x_new) * 3
-    mov edx, ecx              ; y_new = y+1
-    imul edx, r13d            ; y_new * width
-    add edx, eax              ; + x_new
-    imul edx, 3                ; *3
-    ; Ustaw rsi na indeks pikselu
-    mov esi, edx
-    ; Dodaj piksel do sumy
-    call sum_pixels_row
-skip_x_offset_plus_1:
-    ; Inkrementuj x_offset
-    add r15d, 1
-    cmp r15d, 2
-    jle sum_x_offsets_plus_1
-
-skip_row_plus_1:
-
-    ; Rzπd +2
-    mov ecx, r12d
-    add ecx, 2
-    cmp ecx, r10d
-    jge skip_row_plus_2
-    mov esi, ecx
-    imul esi, r13d
-    add esi, r14d
-    imul esi, 3
-    ; Dodanie sumowania poziomych x_offsets (-2 do +2)
-    mov r15d, -2              ; x_offset start
-sum_x_offsets_plus_2:
-    ; Oblicz x_new = x + x_offset
-    mov eax, r14d
-    add eax, r15d
-    ; Sprawdü granice x
-    cmp eax, 0
-    jl skip_x_offset_plus_2
-    cmp eax, r13d
-    jge skip_x_offset_plus_2
-    ; Oblicz indeks pikselu: (y_new * width + x_new) * 3
-    mov edx, ecx              ; y_new = y+2
-    imul edx, r13d            ; y_new * width
-    add edx, eax              ; + x_new
-    imul edx, 3                ; *3
-    ; Ustaw rsi na indeks pikselu
-    mov esi, edx
-    ; Dodaj piksel do sumy
-    call sum_pixels_row
-skip_x_offset_plus_2:
-    ; Inkrementuj x_offset
-    add r15d, 1
-    cmp r15d, 2
-    jle sum_x_offsets_plus_2
-
-skip_row_plus_2:
+    sub ecx, 2                ; y-2
+    call process_row
+    add ecx, 1                ; y-1
+    call process_row
+    add ecx, 1                ; y
+    call process_row
+    add ecx, 1                ; y+1
+    call process_row
+    add ecx, 1                ; y+2
+    call process_row
 
     ; Podziel sumy przez 25
     movss xmm4, dword ptr [const_0_04]  ; Za≥aduj 0.04 do xmm4
@@ -234,7 +64,6 @@ skip_row_plus_2:
     cvttss2si edx, xmm1 ; Green
     cvttss2si r11d, xmm2 ; Red
 
-    ; Ogranicz wartoúci do 0-255
     cmp ecx, 255
     jle clamp_blue
     mov ecx, 255
@@ -258,12 +87,10 @@ clamp_red:
     mov byte ptr [rbp + rax + 1], dl ; Green
     mov byte ptr [rbp + rax + 2], r11b ; Red
 
-    ; NastÍpny x
     inc r14d
     jmp col_loop
 
 next_row:
-    ; NastÍpny y
     inc r12d
     jmp row_loop
 
@@ -279,9 +106,43 @@ end_function:
     pop rbp
     ret
 
-; Funkcja pomocnicza do sumowania pikseli w wierszu
+process_row PROC
+    cmp ecx, 0
+    jl skip_row
+    cmp ecx, r10d
+    jge skip_row
+
+    mov esi, ecx
+    imul esi, r13d            ; y_offset * width
+    add esi, r14d             ; + x
+    imul esi, 3               ; *3 (B, G, R)
+
+    mov r15d, -2              ; x_offset start
+sum_x_offsets:
+    mov eax, r14d
+    add eax, r15d
+    cmp eax, 0
+    jl skip_x_offset
+    cmp eax, r13d
+    jge skip_x_offset
+
+    mov edx, ecx              ; y_new
+    imul edx, r13d
+    add edx, eax              ; + x_new
+    imul edx, 3                ; *3
+    mov esi, edx
+    call sum_pixels_row
+
+skip_x_offset:
+    add r15d, 1
+    cmp r15d, 2
+    jle sum_x_offsets
+
+skip_row:
+    ret
+process_row ENDP
+
 sum_pixels_row PROC
-    ; Pobierz wartoúci pikseli i dodaj do sum
     movzx r8d, byte ptr [rbp + rsi]     ; Blue
     cvtsi2ss xmm4, r8d
     addss xmm0, xmm4

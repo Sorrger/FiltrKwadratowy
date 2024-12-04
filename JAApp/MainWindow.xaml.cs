@@ -41,7 +41,7 @@ namespace SquareFilter
                 {
                     int height = loadedBitmap.PixelHeight;
                     int width = loadedBitmap.PixelWidth;
-                    int bytesPerPixel = 3; // Format RGB24, czyli x3
+                    int bytesPerPixel = 3;
 
                     WriteableBitmap filteredBitmap = new WriteableBitmap(loadedBitmap);
 
