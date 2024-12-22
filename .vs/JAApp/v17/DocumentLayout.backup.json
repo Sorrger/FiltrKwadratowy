@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|solutionrelative:JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\jaapp.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\jaapp.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+      "AbsoluteMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|solutionrelative:JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{C7B6F7C6-4007-4EDD-8307-951C2D36A4B9}|CPPDLL\\CPPDLL.vcxproj|solutionrelative:CPPDLL\\DarkenImage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\jaapp.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\jaapp.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,42 +21,18 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "DockedWidth": 252,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "JAApp\\MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
-              "RelativeToolTip": "JAApp\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAowF8AAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-03T17:25:48.194Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "DarkenImage.cpp",
-              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp",
-              "RelativeDocumentMoniker": "CPPDLL\\DarkenImage.cpp",
-              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\CPPDLL\\DarkenImage.cpp",
-              "RelativeToolTip": "CPPDLL\\DarkenImage.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-12-02T08:45:53.482Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "mydll.asm",
               "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm",
               "RelativeDocumentMoniker": "JADll\\mydll.asm",
-              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm \u2B24",
-              "RelativeToolTip": "JADll\\mydll.asm \u2B24",
-              "ViewState": "AgIAALQAAAAAAAAAAAAAAEcAAAAbAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm",
+              "RelativeToolTip": "JADll\\mydll.asm",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAwLIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2024-11-30T11:23:21.211Z",
               "EditorCaption": ""
@@ -75,6 +47,25 @@
               "RelativeToolTip": "JAApp\\JAApp.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2024-12-15T18:00:46.849Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 232,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "JAApp\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JAApp\\MainWindow.xaml.cs",
+              "RelativeToolTip": "JAApp\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-03T17:25:48.194Z",
+              "EditorCaption": ""
             }
           ]
         }

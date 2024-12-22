@@ -16,10 +16,10 @@ namespace SquareFilter
     {
         private BitmapSource loadedBitmap;
 
-        [DllImport("/../../../../x64/Release/JADll.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("JADll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Darken(IntPtr pixelData, int width, int startY, int endY, int imageHeight);
 
-        [DllImport("/../../../../x64/Release/CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("CPPDll.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void Darken2(IntPtr pixelData, int width, int startY, int endY, int imageHeight);
 
         public MainWindow()
