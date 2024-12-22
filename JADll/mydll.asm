@@ -1,7 +1,6 @@
 .DATA
     align 16
-const_0_04  dd 0.04           ; Sta³a do mno¿enia (1/25)
-    align 16
+const_0_04  dd 0.04, 0.04, 0.04, 0.04  ; wektor [0.04, 0.04, 0.04, 0.04]
 
 .CODE
 PUBLIC Darken
@@ -26,66 +25,73 @@ Darken PROC
     ; Pêtla po wierszach
 row_loop:
     cmp r12d, r9d
-    jge end_function         ; Jeœli y >= endY, zakoñcz
+    jge end_function         ; Je¿eli y >= endY, zakoñcz
 
     ; Inicjalizacja x
     xor r14d, r14d           ; r14d = x
 
 col_loop:
     cmp r14d, r13d
-    jge next_row             ; Jeœli x >= width, przejdŸ do nastêpnego wiersza
+    jge next_row             ; Je¿eli x >= width, przejdŸ do nastêpnego wiersza
 
-    ; Inicjalizacja sum
-    pxor xmm0, xmm0            ; sumBlue
-    pxor xmm1, xmm1            ; sumGreen
-    pxor xmm2, xmm2            ; sumRed
+    ; Inicjalizacja sumów pikseli
+    pxor xmm0, xmm0          ; xmm0 = [0,0,0,0] - bêdzie sumowaæ [B,G,R,A?]
 
     ; Rêczne sumowanie pikseli w s¹siedztwie 5x5
     mov ecx, r12d
-    sub ecx, 2                ; y-2
+    sub ecx, 2               ; y-2
     call process_row
-    add ecx, 1                ; y-1
+    add ecx, 1               ; y-1
     call process_row
-    add ecx, 1                ; y
+    add ecx, 1               ; y
     call process_row
-    add ecx, 1                ; y+1
+    add ecx, 1               ; y+1
     call process_row
-    add ecx, 1                ; y+2
+    add ecx, 1               ; y+2
     call process_row
 
-    ; Podziel sumy przez 25
-    movss xmm4, dword ptr [const_0_04]  ; Za³aduj 0.04 do xmm4
-    mulss xmm0, xmm4
-    mulss xmm1, xmm4
-    mulss xmm2, xmm4
+    ; Podziel sumy przez 25 (mno¿¹c przez 0.04)
+    mulps xmm0, xmmword ptr [const_0_04]
 
-    ; Konwertuj z powrotem do liczb ca³kowitych i ogranicz do 0-255
-    cvttss2si ecx, xmm0 ; Blue
-    cvttss2si edx, xmm1 ; Green
-    cvttss2si r11d, xmm2 ; Red
+    ; Konwertuj z powrotem do liczb ca³kowitych
+    cvttps2dq xmm1, xmm0      ; w xmm1 mamy [B_int, G_int, R_int, A_int?]
 
-    cmp ecx, 255
-    jle clamp_blue
-    mov ecx, 255
-clamp_blue:
-    cmp edx, 255
-    jle clamp_green
-    mov edx, 255
-clamp_green:
-    cmp r11d, 255
-    jle clamp_red
-    mov r11d, 255
-clamp_red:
+    ; Ogranicz do zakresu 0-255
+    movdqa xmm2, xmm1
+    pcmpeqd xmm3, xmm3        ; xmm3 = -1
+    psrld xmm3, 24            ; xmm3 = [0x000000FF, 0x000000FF, ...] => 255 w ka¿dej 32-bit czêœci
+    pminsd xmm1, xmm3         ; xmm1 = min(xmm1, 255)
 
-    ; Zapisz nowe wartoœci piksela
+    ; Teraz wyci¹gamy kana³y (B, G, R) do rejestrów 32-bit: ecx = B, edx = G, r11d = R
+    pshufd xmm2, xmm1, 0       ; xmm2 = [B_int, B_int, B_int, B_int]
+    movd ecx, xmm2
+
+    pshufd xmm2, xmm1, 55h    ; xmm2 = [G_int, G_int, G_int, G_int]
+    movd edx, xmm2
+
+    pshufd xmm2, xmm1, 0AAh   ; xmm2 = [R_int, R_int, R_int, R_int]
+    movd r11d, xmm2
+
+    ; Oblicz offset docelowy w pamiêci
     mov eax, r12d
     imul eax, r13d
     add eax, r14d
     imul eax, 3
 
-    mov byte ptr [rbp + rax], cl     ; Blue
-    mov byte ptr [rbp + rax + 1], dl ; Green
-    mov byte ptr [rbp + rax + 2], r11b ; Red
+    ; ===============================
+    ; *** Zapis piksela JEDN¥ INSTRUKCJ¥ ***
+    ; ===============================
+    ;  ecx = B, edx = G, r11d = R
+    ;  Po³¹cz je w EBX = 00RRGGBB
+    mov ebx, ecx              ; B w dolnym bajcie
+    shl edx, 8                ; G przesuwamy o 8 bitów
+    or  ebx, edx              ; EBX = 0000GGBB
+    shl r11d, 16              ; R w wy¿szych bitach
+    or  ebx, r11d             ; EBX = 00RRGGBB
+
+    ; Zapisz 4 bajty do [rbp + rax], z których 3 to B,G,R
+    ; ten czwarty jest "nadmiarowy"
+    mov dword ptr [rbp + rax], ebx
 
     inc r14d
     jmp col_loop
@@ -106,6 +112,10 @@ end_function:
     pop rbp
     ret
 
+; ------------------------------------------------------
+; process_row: Dodaje do xmm0 piksele z wiersza ecx
+;              w kolumnach [x-2..x+2], jeœli mieszcz¹ siê w obrazie
+; ------------------------------------------------------
 process_row PROC
     cmp ecx, 0
     jl skip_row
@@ -113,11 +123,11 @@ process_row PROC
     jge skip_row
 
     mov esi, ecx
-    imul esi, r13d            ; y_offset * width
-    add esi, r14d             ; + x
-    imul esi, 3               ; *3 (B, G, R)
+    imul esi, r13d
+    add esi, r14d
+    imul esi, 3
 
-    mov r15d, -2              ; x_offset start
+    mov r15d, -2
 sum_x_offsets:
     mov eax, r14d
     add eax, r15d
@@ -126,10 +136,10 @@ sum_x_offsets:
     cmp eax, r13d
     jge skip_x_offset
 
-    mov edx, ecx              ; y_new
+    mov edx, ecx
     imul edx, r13d
-    add edx, eax              ; + x_new
-    imul edx, 3                ; *3
+    add edx, eax
+    imul edx, 3
     mov esi, edx
     call sum_pixels_row
 
@@ -142,18 +152,31 @@ skip_row:
     ret
 process_row ENDP
 
+; ------------------------------------------------------
+; sum_pixels_row: Wczytuje piksel (B,G,R + 1 bajt „nadmiarowy”)
+;                 i dodaje go do xmm0 w formacie float: [B, G, R, A?]
+;                 (A? to bêdzie 0, jeœli tak zapisano w pamiêci, lub
+;                 jakieœ dane – ale i tak licz¹ siê g³ównie B,G,R).
+; ------------------------------------------------------
 sum_pixels_row PROC
-    movzx r8d, byte ptr [rbp + rsi]     ; Blue
-    cvtsi2ss xmm4, r8d
-    addss xmm0, xmm4
+    ; Wczytujemy 4 bajty (B, G, R, X) do rejestru XMM4.
+    movd xmm4, dword ptr [rbp + rsi]     ; wczytaj 32 bity
 
-    movzx r8d, byte ptr [rbp + rsi + 1] ; Green
-    cvtsi2ss xmm4, r8d
-    addss xmm1, xmm4
+    ; Przygotowujemy XMM5 = 0, by „rozszerzaæ” bajty do word/dword.
+    pxor xmm5, xmm5
 
-    movzx r8d, byte ptr [rbp + rsi + 2] ; Red
-    cvtsi2ss xmm4, r8d
-    addss xmm2, xmm4
+    ; Rozszerz z 8-bitów do 16-bitów (punpcklbw: unpack low bytes to words).
+    punpcklbw xmm4, xmm5                 ; po tym xmm4 = [B, G, R, A?] w 16-bitach
+
+    ; Rozszerz z 16-bitów do 32-bitów.
+    punpcklwd xmm4, xmm5                 ; po tym xmm4 = [B, G, R, A?] w 32-bitach
+
+    ; Konwersja z 32-bitów do float.
+    cvtdq2ps xmm4, xmm4                  ; xmm4 = [B_float, G_float, R_float, A_float?]
+
+    ; Dodaj do sumy w xmm0
+    addps xmm0, xmm4
+
     ret
 sum_pixels_row ENDP
 
