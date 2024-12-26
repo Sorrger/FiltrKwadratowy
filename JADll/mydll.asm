@@ -57,20 +57,11 @@ col_loop:
     cvttps2dq xmm1, xmm0      ; w xmm1 mamy [B_int, G_int, R_int, A_int?]
 
     ; Ogranicz do zakresu 0-255
-    movdqa xmm2, xmm1
-    pcmpeqd xmm3, xmm3        ; xmm3 = -1
-    psrld xmm3, 24            ; xmm3 = [0x000000FF, 0x000000FF, ...] => 255 w ka¿dej 32-bit czêœci
-    pminsd xmm1, xmm3         ; xmm1 = min(xmm1, 255)
+    packusdw xmm1, xmm1       ; Sk³adanie do 16-bitowych liczb
+    packuswb xmm1, xmm1       ; Sk³adanie do 8-bitowych liczb
 
-    ; Teraz wyci¹gamy kana³y (B, G, R) do rejestrów 32-bit: ecx = B, edx = G, r11d = R
-    pshufd xmm2, xmm1, 0       ; xmm2 = [B_int, B_int, B_int, B_int]
-    movd ecx, xmm2
-
-    pshufd xmm2, xmm1, 55h    ; xmm2 = [G_int, G_int, G_int, G_int]
-    movd edx, xmm2
-
-    pshufd xmm2, xmm1, 0AAh   ; xmm2 = [R_int, R_int, R_int, R_int]
-    movd r11d, xmm2
+    ; Przekszta³æ do formatu 00RRGGBB
+    movd ebx, xmm1            ; Zapisz dolne 32 bity (00RRGGBB) do rejestru ebx
 
     ; Oblicz offset docelowy w pamiêci
     mov eax, r12d
@@ -78,19 +69,7 @@ col_loop:
     add eax, r14d
     imul eax, 3
 
-    ; ===============================
-    ; *** Zapis piksela JEDN¥ INSTRUKCJ¥ ***
-    ; ===============================
-    ;  ecx = B, edx = G, r11d = R
-    ;  Po³¹cz je w EBX = 00RRGGBB
-    mov ebx, ecx              ; B w dolnym bajcie
-    shl edx, 8                ; G przesuwamy o 8 bitów
-    or  ebx, edx              ; EBX = 0000GGBB
-    shl r11d, 16              ; R w wy¿szych bitach
-    or  ebx, r11d             ; EBX = 00RRGGBB
-
-    ; Zapisz 4 bajty do [rbp + rax], z których 3 to B,G,R
-    ; ten czwarty jest "nadmiarowy"
+    ; Zapisz 4 bajty (B, G, R, X) do pamiêci
     mov dword ptr [rbp + rax], ebx
 
     inc r14d
@@ -153,19 +132,17 @@ skip_row:
 process_row ENDP
 
 ; ------------------------------------------------------
-; sum_pixels_row: Wczytuje piksel (B,G,R + 1 bajt „nadmiarowy”)
+; sum_pixels_row: Wczytuje piksel (B,G,R + 1 bajt "nadmiarowy")
 ;                 i dodaje go do xmm0 w formacie float: [B, G, R, A?]
-;                 (A? to bêdzie 0, jeœli tak zapisano w pamiêci, lub
-;                 jakieœ dane – ale i tak licz¹ siê g³ównie B,G,R).
 ; ------------------------------------------------------
 sum_pixels_row PROC
     ; Wczytujemy 4 bajty (B, G, R, X) do rejestru XMM4.
     movd xmm4, dword ptr [rbp + rsi]     ; wczytaj 32 bity
 
-    ; Przygotowujemy XMM5 = 0, by „rozszerzaæ” bajty do word/dword.
+    ; Przygotowujemy XMM5 = 0, by „roszerzaæ” bajty do word/dword.
     pxor xmm5, xmm5
 
-    ; Rozszerz z 8-bitów do 16-bitów (punpcklbw: unpack low bytes to words).
+    ; Rozszerz z 8-bitów do 16-bitów.
     punpcklbw xmm4, xmm5                 ; po tym xmm4 = [B, G, R, A?] w 16-bitach
 
     ; Rozszerz z 16-bitów do 32-bitów.
