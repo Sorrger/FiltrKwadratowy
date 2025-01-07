@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JAApp\\JAApp.csproj": {}
+    "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JAApp\\JAApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JAApp\\JAApp.csproj": {
+    "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JAApp\\JAApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JAApp\\JAApp.csproj",
+        "projectUniqueName": "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JAApp\\JAApp.csproj",
         "projectName": "JAApp",
-        "projectPath": "C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JAApp\\JAApp.csproj",
+        "projectPath": "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JAApp\\JAApp.csproj",
         "packagesPath": "C:\\Users\\Sorrg\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JAApp\\obj\\",
+        "outputPath": "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JAApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

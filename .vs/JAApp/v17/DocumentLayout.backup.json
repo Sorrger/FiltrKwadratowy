@@ -1,14 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\",
+  "WorkspaceRootPath": "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{786A75D4-F6B6-4698-8D76-8249A5675D1D}|JADll\\JADll.vcxproj|solutionrelative:JADll\\mydll.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|c:\\users\\sorrg\\source\\repos\\sorrger\\squarefilter\\jaapp\\jaapp.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{8B9BADD0-89FD-4FB4-BA8C-77F423DEDC7C}|JAApp\\JAApp.csproj|solutionrelative:jaapp\\jaapp.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,25 +20,14 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "mydll.asm",
-              "DocumentMoniker": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm",
+              "DocumentMoniker": "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JADll\\mydll.asm",
               "RelativeDocumentMoniker": "JADll\\mydll.asm",
-              "ToolTip": "C:\\Users\\Sorrg\\source\\repos\\Sorrger\\SquareFilter\\JADll\\mydll.asm",
+              "ToolTip": "C:\\Users\\Sorrg\\Desktop\\JA\\SquareFilter\\JADll\\mydll.asm",
               "RelativeToolTip": "JADll\\mydll.asm",
-              "ViewState": "AgIAACsAAAAAAAAAAAAkwEYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHUAAAAAAAAAAAAAAIsAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-11-30T11:23:21.211Z",
+              "WhenOpened": "2025-01-07T10:56:04.081Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "JAApp",
-              "DocumentMoniker": "C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JAApp\\JAApp.csproj",
-              "RelativeDocumentMoniker": "JAApp\\JAApp.csproj",
-              "ToolTip": "C:\\Users\\Sorrg\\Source\\Repos\\Sorrger\\SquareFilter\\JAApp\\JAApp.csproj",
-              "RelativeToolTip": "JAApp\\JAApp.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-12-15T18:00:46.849Z"
             }
           ]
         }
