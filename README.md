@@ -1,12 +1,12 @@
 <h1>Aplikacja wykorzystująca filtr kwadratowy</h1>
 
-Opis projektu
+<b>Opis projektu</b>
 
 Aplikacja desktopowa z interfejsem graficznym (GUI) napisana w C# WPF,
 wykorzystująca algorytm filtra kwadratowego zaimplementowany w języku Asembler oraz C++.
 Umożliwia przetwarzanie obrazów z wykorzystaniem wielowątkowości oraz obsługę zewnętrznych bibliotek DLL.
 
-Funkcjonalności
+<b>Funkcjonalności</b>
 <ul>
   <li>Interfejs użytkownika (GUI) w technologii WPF, zapewniający wygodną obsługę aplikacji.</li>
   <li>Obsługa przeciągnij i upuść (Drag and Drop) do dodawania obrazów w różnych formatach.</li>
@@ -16,7 +16,7 @@ Funkcjonalności
   <li>Asynchroniczne przetwarzanie obrazu, umożliwiające płynniejsze działanie aplikacji podczas przetwarzania danych.</li>
 </ul>
 
-Technologie:
+<b>Technologie:</b>
 <ul>
   <li>C# WPF – interfejs użytkownika oraz obsługa logiki aplikacji.</li>
   <li>C++ / Asembler – implementacja algorytmu filtra kwadratowego.</li>
