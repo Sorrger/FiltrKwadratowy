@@ -23,6 +23,5 @@ Umożliwia przetwarzanie obrazów z wykorzystaniem wielowątkowości oraz obsłu
   <li>Multithreading – optymalizacja przetwarzania obrazu poprzez podział na segmenty filtrowane jednocześnie.</li>
 </ul>
 <p>
-<b>Autor:</b>
--> Sorrger
+<b>Autor:</b> Sorrger
 </p>
