@@ -22,7 +22,7 @@ Umożliwia przetwarzanie obrazów z wykorzystaniem wielowątkowości oraz obsłu
   <li>C++ / Asembler – implementacja algorytmu filtra kwadratowego.</li>
   <li>Multithreading – optymalizacja przetwarzania obrazu poprzez podział na segmenty filtrowane jednocześnie.</li>
 </ul>
-
-Autor:
-->Sorrger
-
+<p>
+<b>Autor:</b>
+-> Sorrger
+</p>
